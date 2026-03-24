@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Forces & Movement · KS3 Physics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface2: #222635;
+  --border: rgba(255,255,255,0.08);
+  --text: #e8eaf0;
+  --muted: #8b8fa8;
+  --accent: #6c8fff;
+  --accent2: #ff6b6b;
+  --accent3: #4ecca3;
+  --accent4: #ffd166;
+  --accent5: #c77dff;
+  --radius: 16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* ─── HERO ─── */
+.hero{position:relative;padding:40px 20px 30px;text-align:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(108,143,255,0.18) 0%, transparent 70%);pointer-events:none}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.hero h1{font-size:clamp(28px,7vw,52px);font-weight:900;line-height:1.1;letter-spacing:-1px;margin-bottom:12px}
+.hero h1 span{color:var(--accent)}
+.hero-sub{font-size:15px;color:var(--muted);max-width:460px;margin:0 auto 24px;line-height:1.6}
+.progress-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px}
+.xp-pill{background:rgba(108,143,255,0.15);border:1px solid rgba(108,143,255,0.3);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;color:var(--accent)}
+.stars-display{font-size:18px;letter-spacing:2px}
+
+/* ─── NAV TABS ─── */
+.nav-tabs{display:flex;gap:6px;overflow-x:auto;padding:0 16px 16px;scrollbar-width:none;justify-content:center;flex-wrap:wrap}
+.nav-tabs::-webkit-scrollbar{display:none}
+.ntab{flex-shrink:0;padding:8px 18px;border-radius:20px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap}
+.ntab:hover{border-color:var(--accent);color:var(--accent)}
+.ntab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.ntab .nt-icon{margin-right:5px}
+
+/* ─── SECTIONS ─── */
+.section{display:none;max-width:720px;margin:0 auto;padding:0 16px 60px}
+.section.active{display:block}
+
+/* ─── LEARN CARDS ─── */
+.topic-nav{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+.tnav-btn{padding:5px 12px;border-radius:12px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s}
+.tnav-btn.active,.tnav-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(108,143,255,0.1)}
+
+.lesson-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;display:none;animation:fadeUp .35s ease}
+.lesson-card.visible{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+.lc-tag{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:8px;margin-bottom:14px}
+.lc-tag.contact{background:rgba(76,204,163,0.15);color:var(--accent3)}
+.lc-tag.noncontact{background:rgba(108,143,255,0.15);color:var(--accent)}
+.lc-tag.effects{background:rgba(255,209,102,0.15);color:var(--accent4)}
+.lc-tag.balanced{background:rgba(199,125,255,0.15);color:var(--accent5)}
+.lc-tag.resultant{background:rgba(255,107,107,0.15);color:var(--accent2)}
+
+.lc-title{font-size:20px;font-weight:900;margin-bottom:8px}
+.lc-body{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:18px}
+.lc-body strong{color:var(--text);font-weight:700}
+
+.key-facts{background:var(--surface2);border-radius:12px;padding:16px 18px;margin-bottom:18px}
+.kf-title{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.kf-list{list-style:none;display:flex;flex-direction:column;gap:7px}
+.kf-list li{font-size:13px;display:flex;align-items:flex-start;gap:10px;color:var(--text);line-height:1.5}
+.kf-list li::before{content:'→';color:var(--accent);font-weight:800;flex-shrink:0;margin-top:1px}
+
+.did-you-know{background:linear-gradient(135deg,rgba(108,143,255,0.12),rgba(199,125,255,0.08));border:1.5px solid rgba(108,143,255,0.25);border-radius:12px;padding:14px 16px;font-size:13px;line-height:1.6;margin-bottom:18px}
+.dyk-label{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent5);margin-bottom:6px}
+
+/* ─── SVG DIAGRAMS ─── */
+.diagram-wrap{background:var(--surface2);border-radius:12px;overflow:hidden;margin-bottom:18px;padding:16px}
+.diagram-wrap svg{width:100%;height:auto;display:block}
+
+/* ─── INTERACTIVE SIMS ─── */
+.sim-wrap{background:var(--surface2);border-radius:12px;padding:18px;margin-bottom:18px}
+.sim-title{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent3);margin-bottom:14px}
+.slider-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.slider-label{font-size:12px;color:var(--muted);width:120px;flex-shrink:0}
+.slider-val{font-size:12px;font-weight:700;font-family:'Space Mono',monospace;width:70px;text-align:right;flex-shrink:0}
+input[type=range]{flex:1;accent-color:var(--accent);height:4px}
+.sim-canvas{width:100%;height:90px;background:var(--bg);border-radius:8px;overflow:hidden;position:relative;margin:10px 0}
+.sim-info{font-size:12px;color:var(--muted);line-height:1.6;margin-top:8px}
+.sim-btn{padding:8px 18px;border-radius:10px;border:1.5px solid var(--accent);background:rgba(108,143,255,0.12);color:var(--accent);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:8px}
+.sim-btn:hover{background:var(--accent);color:#fff}
+.sim-btn.active{background:var(--accent);color:#fff}
+
+/* ─── QUIZ ─── */
+.quiz-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.quiz-count{font-size:12px;font-weight:700;color:var(--muted);font-family:'Space Mono',monospace}
+.quiz-xp{font-size:12px;font-weight:700;color:var(--accent4)}
+.q-text{font-size:17px;font-weight:800;line-height:1.5;margin-bottom:20px}
+.q-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.q-opt{padding:14px 18px;border-radius:12px;border:1.5px solid var(--border);background:transparent;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;cursor:pointer;text-align:left;transition:all .2s;display:flex;align-items:center;gap:12px}
+.q-opt:hover:not([disabled]){border-color:var(--accent);background:rgba(108,143,255,0.08)}
+.q-opt.selected{border-color:var(--accent);background:rgba(108,143,255,0.12)}
+.q-opt.correct{border-color:var(--accent3);background:rgba(76,204,163,0.15);color:var(--accent3)}
+.q-opt.wrong{border-color:var(--accent2);background:rgba(255,107,107,0.12);color:var(--accent2)}
+.q-key{width:28px;height:28px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;font-family:'Space Mono',monospace}
+.q-btns{display:flex;gap:10px}
+.q-btn{flex:1;padding:12px;border-radius:12px;border:none;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s}
+.q-btn.check{background:var(--accent);color:#fff}
+.q-btn.check:hover{filter:brightness(1.15)}
+.q-btn.check:disabled{opacity:.4;cursor:default}
+.q-btn.next{background:var(--surface2);color:var(--text);border:1.5px solid var(--border)}
+.q-btn.next:hover{border-color:var(--accent);color:var(--accent)}
+.q-feedback{border-radius:12px;padding:14px 16px;font-size:14px;font-weight:600;line-height:1.6;margin-bottom:16px;display:none}
+.q-feedback.ok{background:rgba(76,204,163,0.12);border:1.5px solid rgba(76,204,163,0.3);color:var(--accent3)}
+.q-feedback.bad{background:rgba(255,107,107,0.1);border:1.5px solid rgba(255,107,107,0.25);color:#ff9a9a}
+.hint-btn{background:none;border:1.5px solid var(--border);border-radius:10px;padding:6px 14px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s;margin-bottom:14px}
+.hint-btn:hover{border-color:var(--accent4);color:var(--accent4)}
+.hint-box{background:rgba(255,209,102,0.08);border:1.5px solid rgba(255,209,102,0.2);border-radius:10px;padding:12px 14px;font-size:12px;color:#ffd166aa;line-height:1.6;margin-bottom:14px;display:none}
+
+/* ─── RESULTS ─── */
+.results-card{text-align:center;padding:30px 20px}
+.results-score{font-size:56px;font-weight:900;color:var(--accent);font-family:'Space Mono',monospace}
+.results-label{font-size:14px;color:var(--muted);margin-bottom:20px}
+.results-stars{font-size:32px;letter-spacing:6px;margin-bottom:24px}
+.results-msg{font-size:16px;font-weight:700;margin-bottom:24px;line-height:1.5}
+.retry-btn{padding:12px 30px;border-radius:12px;background:var(--accent);color:#fff;border:none;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer}
+.retry-btn:hover{filter:brightness(1.15)}
+
+/* ─── MATCH GAME ─── */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.match-col-label{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;text-align:center}
+.match-item{padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center;min-height:52px;display:flex;align-items:center;justify-content:center;line-height:1.4}
+.match-item:hover:not([disabled]){border-color:var(--accent);background:rgba(108,143,255,0.08)}
+.match-item.selected{border-color:var(--accent);background:rgba(108,143,255,0.15);color:var(--accent)}
+.match-item.matched{border-color:var(--accent3);background:rgba(76,204,163,0.12);color:var(--accent3);cursor:default}
+.match-item.wrong-flash{border-color:var(--accent2);background:rgba(255,107,107,0.12);animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.match-score{font-size:13px;color:var(--muted);text-align:center;margin-bottom:10px;font-family:'Space Mono',monospace}
+
+/* ─── FORCES DIAGRAM DRAG ─── */
+.force-scene{position:relative;height:180px;background:var(--bg);border-radius:10px;overflow:visible;margin-bottom:14px}
+.force-label-row{display:flex;justify-content:space-between;padding:0 8px;margin-bottom:6px}
+.force-label{font-size:10px;font-weight:700;color:var(--muted);font-family:'Space Mono',monospace}
+
+/* ─── CHIP LABELS ─── */
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.chip{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.chip.contact{background:rgba(76,204,163,0.15);color:var(--accent3);border:1px solid rgba(76,204,163,0.3)}
+.chip.noncontact{background:rgba(108,143,255,0.15);color:var(--accent);border:1px solid rgba(108,143,255,0.3)}
+
+/* ─── PROGRESS BAR ─── */
+.prog-bar{height:3px;background:var(--surface2);border-radius:2px;margin-bottom:24px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent5));border-radius:2px;transition:width .5s ease}
+
+/* ─── FLOATING PARTICLES ─── */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.particle{position:absolute;border-radius:50%;opacity:0;animation:float linear infinite}
+@keyframes float{0%{opacity:0;transform:translateY(0) scale(0)}10%{opacity:.6}90%{opacity:.3}100%{opacity:0;transform:translateY(-100vh) scale(1)}}
+
+.content-wrap{position:relative;z-index:1}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:500px){
+  .hero h1{font-size:26px}
+  .match-grid{grid-template-columns:1fr}
+  .q-text{font-size:15px}
+}
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<div class="content-wrap">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-eyebrow">KS3 Physics · Year 8</div>
+  <h1>Forces &amp;<br><span>Movement</span></h1>
+  <p class="hero-sub">Explore contact forces, non-contact forces, balanced &amp; unbalanced forces — with interactive simulations and quizzes.</p>
+  <div class="progress-row">
+    <div class="xp-pill" id="xp-pill">⚡ 0 XP</div>
+    <div class="stars-display" id="stars-display">☆☆☆☆☆</div>
+  </div>
+</div>
+
+<!-- NAVIGATION -->
+<div class="nav-tabs">
+  <button class="ntab active" onclick="showSection('learn')" id="nt-learn"><span class="nt-icon">📖</span>Learn</button>
+  <button class="ntab" onclick="showSection('sim')" id="nt-sim"><span class="nt-icon">🔬</span>Simulate</button>
+  <button class="ntab" onclick="showSection('match')" id="nt-match"><span class="nt-icon">🎯</span>Match-Up</button>
+  <button class="ntab" onclick="showSection('quiz')" id="nt-quiz"><span class="nt-icon">✏️</span>Quiz</button>
+</div>
+
+<!-- ══════════ LEARN ══════════ -->
+<div class="section active" id="sec-learn">
+
+  <div class="topic-nav">
+    <button class="tnav-btn active" onclick="showLesson(0)">What is a Force?</button>
+    <button class="tnav-btn" onclick="showLesson(1)">Contact Forces</button>
+    <button class="tnav-btn" onclick="showLesson(2)">Non-Contact Forces</button>
+    <button class="tnav-btn" onclick="showLesson(3)">Balanced Forces</button>
+    <button class="tnav-btn" onclick="showLesson(4)">Resultant Force</button>
+  </div>
+
+  <!-- LESSON 0 -->
+  <div class="lesson-card visible" id="lc0">
+    <div class="lc-tag effects">⚡ Foundation</div>
+    <div class="lc-title">What is a Force?</div>
+    <div class="lc-body">
+      A <strong>force</strong> is a push or a pull. Forces can cause objects to <strong>start moving, stop moving, speed up, slow down, or change direction</strong>. They can also <strong>change the shape</strong> of an object.<br><br>
+      Forces are measured in <strong>Newtons (N)</strong>, named after Sir Isaac Newton. We use an instrument called a <strong>Newton meter</strong> (or force meter) to measure them.<br><br>
+      Forces are <strong>vectors</strong> — they have both a <em>size (magnitude)</em> and a <em>direction</em>.
+    </div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 500 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Object box -->
+        <rect x="185" y="55" width="130" height="55" rx="10" fill="#222635" stroke="#6c8fff" stroke-width="1.5"/>
+        <text x="250" y="88" text-anchor="middle" font-size="13" font-weight="700" fill="#e8eaf0" font-family="Nunito,sans-serif">Object</text>
+        <!-- Push arrow left -->
+        <line x1="60" y1="82" x2="183" y2="82" stroke="#4ecca3" stroke-width="2.5" stroke-linecap="round"/>
+        <polygon points="183,76 195,82 183,88" fill="#4ecca3"/>
+        <text x="120" y="68" text-anchor="middle" font-size="11" font-weight="700" fill="#4ecca3" font-family="Nunito,sans-serif">PUSH →</text>
+        <!-- Pull arrow right -->
+        <line x1="317" y1="82" x2="440" y2="82" stroke="#ff6b6b" stroke-width="2.5" stroke-linecap="round"/>
+        <polygon points="440,76 452,82 440,88" fill="#ff6b6b"/>
+        <text x="380" y="68" text-anchor="middle" font-size="11" font-weight="700" fill="#ff6b6b" font-family="Nunito,sans-serif">← PULL</text>
+        <!-- Labels below -->
+        <text x="250" y="140" text-anchor="middle" font-size="10" fill="#8b8fa8" font-family="Nunito,sans-serif">Forces have direction and magnitude · unit: Newtons (N)</text>
+      </svg>
+    </div>
+    <div class="key-facts">
+      <div class="kf-title">Key Points</div>
+      <ul class="kf-list">
+        <li>Forces are pushes or pulls</li>
+        <li>Unit of force = Newton (N)</li>
+        <li>Forces can change speed, direction, or shape</li>
+        <li>Measured with a Newton meter / force meter</li>
+        <li>Forces are vectors (magnitude + direction)</li>
+      </ul>
+    </div>
+    <div class="did-you-know">
+      <div class="dyk-label">💡 Did You Know?</div>
+      The weight of an average apple is approximately 1 Newton. That's why Newton used apples in his famous thought experiments about gravity!
+    </div>
+  </div>
+
+  <!-- LESSON 1 -->
+  <div class="lesson-card" id="lc1">
+    <div class="lc-tag contact">🤝 Contact Forces</div>
+    <div class="lc-title">Contact Forces</div>
+    <div class="lc-body">
+      <strong>Contact forces</strong> only act when two objects are physically touching. There are several types you need to know:
+    </div>
+    <div class="chips">
+      <span class="chip contact">Friction</span>
+      <span class="chip contact">Normal Reaction</span>
+      <span class="chip contact">Air Resistance</span>
+      <span class="chip contact">Thrust</span>
+      <span class="chip contact">Tension</span>
+      <span class="chip contact">Upthrust</span>
+    </div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 500 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Ground -->
+        <rect x="0" y="155" width="500" height="8" fill="#2a2d3e"/>
+        <!-- Box -->
+        <rect x="190" y="105" width="100" height="50" rx="6" fill="#222635" stroke="#4ecca3" stroke-width="1.5"/>
+        <text x="240" y="135" text-anchor="middle" font-size="12" font-weight="700" fill="#e8eaf0" font-family="Nunito,sans-serif">Block</text>
+        <!-- Weight arrow (down) -->
+        <line x1="240" y1="155" x2="240" y2="185" stroke="#ff6b6b" stroke-width="2" stroke-dasharray="3,2"/>
+        <polygon points="234,180 240,192 246,180" fill="#ff6b6b"/>
+        <text x="258" y="185" font-size="10" fill="#ff6b6b" font-family="Nunito,sans-serif">Weight</text>
+        <!-- Normal arrow (up) -->
+        <line x1="210" y1="155" x2="210" y2="105" stroke="#6c8fff" stroke-width="2"/>
+        <polygon points="204,110 210,98 216,110" fill="#6c8fff"/>
+        <text x="148" y="100" font-size="10" fill="#6c8fff" font-family="Nunito,sans-serif">Normal Reaction</text>
+        <!-- Friction arrow (left) -->
+        <line x1="188" y1="130" x2="130" y2="130" stroke="#4ecca3" stroke-width="2"/>
+        <polygon points="135,124 123,130 135,136" fill="#4ecca3"/>
+        <text x="50" y="126" font-size="10" fill="#4ecca3" font-family="Nunito,sans-serif">Friction</text>
+        <!-- Thrust (right) -->
+        <line x1="292" y1="130" x2="350" y2="130" stroke="#ffd166" stroke-width="2"/>
+        <polygon points="345,124 357,130 345,136" fill="#ffd166"/>
+        <text x="362" y="126" font-size="10" fill="#ffd166" font-family="Nunito,sans-serif">Thrust</text>
+        <!-- Air Resistance (down from top) -->
+        <line x1="240" y1="20" x2="240" y2="103" stroke="#c77dff" stroke-width="2" stroke-dasharray="3,2"/>
+        <polygon points="234,98 240,106 246,98" fill="#c77dff"/>
+        <text x="248" y="25" font-size="10" fill="#c77dff" font-family="Nunito,sans-serif">Air Resistance</text>
+      </svg>
+    </div>
+    <div class="key-facts">
+      <div class="kf-title">Contact Force Types</div>
+      <ul class="kf-list">
+        <li><strong>Friction</strong> — opposes motion between surfaces in contact</li>
+        <li><strong>Normal Reaction</strong> — surface pushes back at 90° to the surface</li>
+        <li><strong>Air Resistance (Drag)</strong> — opposes motion through air</li>
+        <li><strong>Thrust</strong> — driving force from an engine</li>
+        <li><strong>Tension</strong> — force in a stretched rope or spring</li>
+        <li><strong>Upthrust</strong> — upward force from a fluid (liquid or gas)</li>
+      </ul>
+    </div>
+    <div class="did-you-know">
+      <div class="dyk-label">💡 Did You Know?</div>
+      Friction can be both useful (brake pads, shoe soles) and a nuisance (inside bike gears). Engineers design lubricants to reduce unwanted friction.
+    </div>
+  </div>
+
+  <!-- LESSON 2 -->
+  <div class="lesson-card" id="lc2">
+    <div class="lc-tag noncontact">🌍 Non-Contact Forces</div>
+    <div class="lc-title">Non-Contact Forces</div>
+    <div class="lc-body">
+      <strong>Non-contact forces</strong> act between objects that are <em>not physically touching</em>. They act across a distance through fields.
+    </div>
+    <div class="chips">
+      <span class="chip noncontact">Gravity</span>
+      <span class="chip noncontact">Magnetism</span>
+      <span class="chip noncontact">Electrostatic</span>
+    </div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 500 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Gravity: Earth & object -->
+        <circle cx="80" cy="80" r="38" fill="#222635" stroke="#4ecca3" stroke-width="1.5"/>
+        <text x="80" y="78" text-anchor="middle" font-size="11" font-weight="700" fill="#4ecca3" font-family="Nunito,sans-serif">Earth</text>
+        <text x="80" y="93" text-anchor="middle" font-size="9" fill="#8b8fa8" font-family="Nunito,sans-serif">Mass = M</text>
+        <circle cx="80" cy="155" r="12" fill="#222635" stroke="#6c8fff" stroke-width="1.5"/>
+        <text x="80" y="159" text-anchor="middle" font-size="8" fill="#6c8fff" font-family="Nunito,sans-serif">m</text>
+        <line x1="80" y1="118" x2="80" y2="142" stroke="#ff6b6b" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <polygon points="74,138 80,146 86,138" fill="#ff6b6b"/>
+        <text x="20" y="140" font-size="9" fill="#ff6b6b" font-family="Nunito,sans-serif">Gravity</text>
+        <!-- Magnets -->
+        <rect x="215" y="60" width="50" height="30" rx="5" fill="#222635" stroke="#ffd166" stroke-width="1.5"/>
+        <text x="240" y="80" text-anchor="middle" font-size="11" font-weight="700" fill="#ff6b6b" font-family="Nunito,sans-serif">N</text>
+        <rect x="285" y="60" width="50" height="30" rx="5" fill="#222635" stroke="#ffd166" stroke-width="1.5"/>
+        <text x="310" y="80" text-anchor="middle" font-size="11" font-weight="700" fill="#6c8fff" font-family="Nunito,sans-serif">S</text>
+        <path d="M265 75 Q275 75 285 75" stroke="#ffd166" stroke-width="2" stroke-dasharray="3,2"/>
+        <polygon points="280,69 288,75 280,81" fill="#ffd166"/>
+        <text x="255" y="110" text-anchor="middle" font-size="9" fill="#ffd166" font-family="Nunito,sans-serif">Magnetic Attraction</text>
+        <!-- Charges -->
+        <circle cx="390" cy="75" r="18" fill="#222635" stroke="#c77dff" stroke-width="1.5"/>
+        <text x="390" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="#ff6b6b" font-family="Nunito,sans-serif">+</text>
+        <circle cx="450" cy="75" r="18" fill="#222635" stroke="#c77dff" stroke-width="1.5"/>
+        <text x="450" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="#6c8fff" font-family="Nunito,sans-serif">−</text>
+        <path d="M408 75 Q430 75 432 75" stroke="#c77dff" stroke-width="2" stroke-dasharray="3,2"/>
+        <polygon points="427,69 435,75 427,81" fill="#c77dff"/>
+        <text x="420" y="110" text-anchor="middle" font-size="9" fill="#c77dff" font-family="Nunito,sans-serif">Electrostatic</text>
+      </svg>
+    </div>
+    <div class="key-facts">
+      <div class="kf-title">Non-Contact Force Types</div>
+      <ul class="kf-list">
+        <li><strong>Gravitational force</strong> — acts between any two masses; always attracts, never repels</li>
+        <li><strong>Magnetic force</strong> — between magnets or magnetic materials; can attract OR repel</li>
+        <li><strong>Electrostatic force</strong> — between charged objects; can attract OR repel</li>
+      </ul>
+    </div>
+    <div class="did-you-know">
+      <div class="dyk-label">💡 Did You Know?</div>
+      Gravity is the weakest of the four fundamental forces — yet it holds galaxies together! The Earth's gravity keeps the Moon orbiting 384,000 km away.
+    </div>
+  </div>
+
+  <!-- LESSON 3 -->
+  <div class="lesson-card" id="lc3">
+    <div class="lc-tag balanced">⚖️ Balanced Forces</div>
+    <div class="lc-title">Balanced Forces</div>
+    <div class="lc-body">
+      Forces are <strong>balanced</strong> when all the forces acting on an object cancel each other out — the resultant force is <strong>zero</strong>.<br><br>
+      When forces are balanced, an object will: <strong>remain stationary</strong> (if already at rest) OR <strong>continue at constant velocity</strong> (if already moving). This is Newton's First Law of Motion.
+    </div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 500 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Stationary block -->
+        <rect x="60" y="60" width="100" height="50" rx="8" fill="#222635" stroke="#4ecca3" stroke-width="1.5"/>
+        <text x="110" y="90" text-anchor="middle" font-size="11" font-weight="700" fill="#e8eaf0" font-family="Nunito,sans-serif">At Rest</text>
+        <line x1="110" y1="58" x2="110" y2="28" stroke="#6c8fff" stroke-width="2"/>
+        <polygon points="104,33 110,21 116,33" fill="#6c8fff"/>
+        <text x="122" y="22" font-size="9" fill="#6c8fff" font-family="Nunito,sans-serif">Normal 10N ↑</text>
+        <line x1="110" y1="112" x2="110" y2="138" stroke="#ff6b6b" stroke-width="2"/>
+        <polygon points="104,133 110,145 116,133" fill="#ff6b6b"/>
+        <text x="122" y="140" font-size="9" fill="#ff6b6b" font-family="Nunito,sans-serif">Weight 10N ↓</text>
+        <text x="110" y="140" text-anchor="middle" font-size="8" fill="#4ecca3" font-family="Nunito,sans-serif"></text>
+        <text x="50" y="145" font-size="10" fill="#4ecca3" font-family="Nunito,sans-serif">Resultant = 0 N ✓</text>
+        <!-- Moving block -->
+        <rect x="300" y="60" width="120" height="50" rx="8" fill="#222635" stroke="#ffd166" stroke-width="1.5"/>
+        <text x="360" y="82" text-anchor="middle" font-size="11" font-weight="700" fill="#e8eaf0" font-family="Nunito,sans-serif">Constant</text>
+        <text x="360" y="98" text-anchor="middle" font-size="11" font-weight="700" fill="#e8eaf0" font-family="Nunito,sans-serif">Velocity</text>
+        <line x1="300" y1="85" x2="255" y2="85" stroke="#4ecca3" stroke-width="2"/>
+        <polygon points="260,79 248,85 260,91" fill="#4ecca3"/>
+        <text x="218" y="81" font-size="9" fill="#4ecca3" font-family="Nunito,sans-serif">Drag 20N</text>
+        <line x1="422" y1="85" x2="468" y2="85" stroke="#ffd166" stroke-width="2"/>
+        <polygon points="463,79 475,85 463,91" fill="#ffd166"/>
+        <text x="432" y="78" font-size="9" fill="#ffd166" font-family="Nunito,sans-serif">Thrust 20N</text>
+        <text x="340" y="145" font-size="10" fill="#ffd166" font-family="Nunito,sans-serif">Resultant = 0 N ✓</text>
+      </svg>
+    </div>
+    <div class="key-facts">
+      <div class="kf-title">Key Points — Balanced Forces</div>
+      <ul class="kf-list">
+        <li>Resultant force = 0 N when balanced</li>
+        <li>Stationary object stays stationary</li>
+        <li>Moving object continues at same speed and direction</li>
+        <li>This is Newton's First Law of Motion</li>
+        <li>Example: a book on a table — weight balanced by normal reaction</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- LESSON 4 -->
+  <div class="lesson-card" id="lc4">
+    <div class="lc-tag resultant">🚀 Resultant Force</div>
+    <div class="lc-title">Resultant Force &amp; Unbalanced Forces</div>
+    <div class="lc-body">
+      The <strong>resultant force</strong> is the single force that has the same effect as all the individual forces combined.<br><br>
+      When forces are <strong>unbalanced</strong> (resultant ≠ 0), the object will <strong>accelerate</strong> in the direction of the resultant force. This leads to Newton's Second Law: <strong>F = m × a</strong>
+    </div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 500 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Rocket scenario -->
+        <rect x="185" y="40" width="130" height="55" rx="8" fill="#222635" stroke="#ff6b6b" stroke-width="1.5"/>
+        <text x="250" y="65" text-anchor="middle" font-size="11" font-weight="700" fill="#e8eaf0" font-family="Nunito,sans-serif">Car (1000 kg)</text>
+        <text x="250" y="82" text-anchor="middle" font-size="9" fill="#8b8fa8" font-family="Nunito,sans-serif">a = F/m</text>
+        <!-- Large thrust -->
+        <line x1="317" y1="67" x2="430" y2="67" stroke="#ffd166" stroke-width="3"/>
+        <polygon points="425,61 437,67 425,73" fill="#ffd166"/>
+        <text x="373" y="57" text-anchor="middle" font-size="10" font-weight="700" fill="#ffd166" font-family="Nunito,sans-serif">Thrust 3000N</text>
+        <!-- Smaller friction -->
+        <line x1="183" y1="67" x2="100" y2="67" stroke="#4ecca3" stroke-width="2"/>
+        <polygon points="105,61 93,67 105,73" fill="#4ecca3"/>
+        <text x="140" y="57" text-anchor="middle" font-size="10" fill="#4ecca3" font-family="Nunito,sans-serif">Friction 1000N</text>
+        <!-- Resultant -->
+        <text x="250" y="120" text-anchor="middle" font-size="11" font-weight="700" fill="#ff6b6b" font-family="Nunito,sans-serif">Resultant = 2000N → a = 2000/1000 = 2 m/s²</text>
+      </svg>
+    </div>
+    <div class="key-facts">
+      <div class="kf-title">Calculating Resultant Force</div>
+      <ul class="kf-list">
+        <li>Forces in the <strong>same direction</strong>: add them together</li>
+        <li>Forces in <strong>opposite directions</strong>: subtract the smaller from the larger</li>
+        <li>Resultant ≠ 0 → object accelerates (Newton's 2nd Law)</li>
+        <li><strong>F = m × a</strong> (force in N, mass in kg, acceleration in m/s²)</li>
+        <li>Direction of acceleration = direction of resultant force</li>
+      </ul>
+    </div>
+    <div class="did-you-know">
+      <div class="dyk-label">💡 Did You Know?</div>
+      A skydiver reaches terminal velocity when air resistance equals their weight — the resultant force becomes zero, so they stop accelerating!
+    </div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;margin-top:8px">
+    <button class="sim-btn" onclick="prevLesson()" id="btn-prev" style="display:none">← Previous</button>
+    <button class="sim-btn" onclick="nextLesson()" id="btn-next" style="margin-left:auto">Next Topic →</button>
+  </div>
+
+</div>
+
+<!-- ══════════ SIMULATE ══════════ -->
+<div class="section" id="sec-sim">
+
+  <div class="sim-wrap" style="margin-bottom:20px">
+    <div class="sim-title">🔬 Resultant Force Calculator</div>
+    <div class="slider-row">
+      <span class="slider-label">Thrust (→)</span>
+      <input type="range" id="sl-thrust" min="0" max="100" value="50" oninput="updateSim()">
+      <span class="slider-val" id="lbl-thrust">50 N</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">Friction (←)</span>
+      <input type="range" id="sl-friction" min="0" max="100" value="20" oninput="updateSim()">
+      <span class="slider-val" id="lbl-friction">20 N</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">Mass</span>
+      <input type="range" id="sl-mass" min="1" max="50" value="10" oninput="updateSim()">
+      <span class="slider-val" id="lbl-mass">10 kg</span>
+    </div>
+    <canvas id="simCanvas" height="90" style="width:100%;background:#0f1117;border-radius:8px;display:block;margin:10px 0"></canvas>
+    <div class="sim-info" id="sim-info"></div>
+  </div>
+
+  <div class="sim-wrap" style="margin-bottom:20px">
+    <div class="sim-title">⚡ Terminal Velocity Simulator</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.6">Watch how a falling object accelerates until drag equals weight — reaching terminal velocity.</p>
+    <div class="slider-row">
+      <span class="slider-label">Object Weight</span>
+      <input type="range" id="sl-weight" min="10" max="100" value="40" oninput="updateTerminal()">
+      <span class="slider-val" id="lbl-weight">40 N</span>
+    </div>
+    <canvas id="termCanvas" height="130" style="width:100%;background:#0f1117;border-radius:8px;display:block;margin:10px 0"></canvas>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <button class="sim-btn active" id="term-btn" onclick="toggleTerminal()">▶ Drop Object</button>
+      <span class="sim-info" id="term-info" style="margin:0">Not dropped yet</span>
+    </div>
+  </div>
+
+  <div class="sim-wrap">
+    <div class="sim-title">🧲 Force Field Explorer</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.6">Click the buttons to see how different non-contact forces behave. Notice attraction vs repulsion.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+      <button class="sim-btn active" onclick="setFieldMode('gravity')">🌍 Gravity</button>
+      <button class="sim-btn" onclick="setFieldMode('attract')">🧲 Attract</button>
+      <button class="sim-btn" onclick="setFieldMode('repel')">↔️ Repel</button>
+    </div>
+    <canvas id="fieldCanvas" height="130" style="width:100%;background:#0f1117;border-radius:8px;display:block"></canvas>
+    <div class="sim-info" id="field-info" style="margin-top:10px"></div>
+  </div>
+
+</div>
+
+<!-- ══════════ MATCH-UP ══════════ -->
+<div class="section" id="sec-match">
+  <div style="margin-bottom:20px">
+    <div class="lc-title" style="margin-bottom:6px">Force Match-Up 🎯</div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.6">Match each force to its correct description. Click a force name, then click its description.</p>
+  </div>
+  <div class="match-score" id="match-score">Matched: 0 / 7</div>
+  <div class="match-grid">
+    <div>
+      <div class="match-col-label">Force Name</div>
+      <div id="match-names"></div>
+    </div>
+    <div>
+      <div class="match-col-label">Description</div>
+      <div id="match-descs"></div>
+    </div>
+  </div>
+  <button class="sim-btn" onclick="resetMatch()" style="width:100%">↺ Reset</button>
+  <div id="match-complete" style="display:none;margin-top:16px">
+    <div class="q-feedback ok" style="display:block">🎉 Perfect! All forces matched correctly! +40 XP earned!</div>
+  </div>
+</div>
+
+<!-- ══════════ QUIZ ══════════ -->
+<div class="section" id="sec-quiz">
+  <div class="prog-bar"><div class="prog-fill" id="quiz-prog" style="width:0%"></div></div>
+  <div id="quiz-container"></div>
+</div>
+
+</div><!-- /content-wrap -->
+
+<script>
+// ─── XP & STARS ───
+let XP = 0, totalStars = 0;
+function addXP(n) {
+  XP += n;
+  document.getElementById('xp-pill').textContent = '⚡ ' + XP + ' XP';
+  const filled = Math.min(Math.floor(XP / 40), 5);
+  document.getElementById('stars-display').textContent =
+    '★'.repeat(filled) + '☆'.repeat(5 - filled);
+}
+
+// ─── NAV ───
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.ntab').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  document.getElementById('nt-' + id).classList.add('active');
+  if (id === 'sim') { updateSim(); initTerminalCanvas(); initFieldCanvas(); }
+  if (id === 'match') resetMatch();
+  if (id === 'quiz') startQuiz();
+}
+
+// ─── LESSONS ───
+let currentLesson = 0;
+const totalLessons = 5;
+function showLesson(i) {
+  document.querySelectorAll('.lesson-card').forEach(c => c.classList.remove('visible'));
+  document.querySelectorAll('.tnav-btn').forEach((b, j) => b.classList.toggle('active', j === i));
+  document.getElementById('lc' + i).classList.add('visible');
+  currentLesson = i;
+  document.getElementById('btn-prev').style.display = i === 0 ? 'none' : 'inline-block';
+  document.getElementById('btn-next').textContent = i === totalLessons - 1 ? '✓ Done!' : 'Next Topic →';
+  if (!seenLessons.has(i)) { seenLessons.add(i); addXP(8); }
+}
+const seenLessons = new Set([0]);
+function nextLesson() { if (currentLesson < totalLessons - 1) showLesson(currentLesson + 1); }
+function prevLesson() { if (currentLesson > 0) showLesson(currentLesson - 1); }
+
+// ─── RESULTANT FORCE SIM ───
+function updateSim() {
+  const thrust = +document.getElementById('sl-thrust').value;
+  const friction = +document.getElementById('sl-friction').value;
+  const mass = +document.getElementById('sl-mass').value;
+  document.getElementById('lbl-thrust').textContent = thrust + ' N';
+  document.getElementById('lbl-friction').textContent = friction + ' N';
+  document.getElementById('lbl-mass').textContent = mass + ' kg';
+  const resultant = thrust - friction;
+  const accel = (resultant / mass).toFixed(2);
+  const info = resultant > 0 ? `Resultant = ${resultant}N →  |  Acceleration = ${accel} m/s² →  (object speeds up)` :
+               resultant < 0 ? `Resultant = ${Math.abs(resultant)}N ←  |  Acceleration = ${Math.abs(accel)} m/s² ← (object slows down)` :
+               `Resultant = 0 N  |  Balanced! Object moves at constant velocity.`;
+  document.getElementById('sim-info').textContent = info;
+  drawSimCanvas(thrust, friction, resultant, mass, accel);
+}
+function drawSimCanvas(thrust, friction, resultant, mass, accel) {
+  const canvas = document.getElementById('simCanvas');
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = Math.round(canvas.offsetWidth * dpr);
+  canvas.height = 90 * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const W = canvas.offsetWidth, H = 90;
+  ctx.clearRect(0, 0, W, H);
+  // Ground
+  ctx.fillStyle = '#1a1d27';
+  ctx.fillRect(0, H - 16, W, 16);
+  // Block
+  const bx = W / 2 - 40, bw = 80, bh = 40, by = H - 56;
+  ctx.fillStyle = '#222635'; ctx.strokeStyle = '#8b8fa8'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.roundRect(bx, by, bw, bh, 6); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#e8eaf0'; ctx.font = `bold ${10 * 1}px Nunito,sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(mass + ' kg', W / 2, by + bh / 2);
+  // Thrust arrow
+  const maxArrow = W / 2 - 60;
+  const ta = Math.min(thrust / 100 * maxArrow, maxArrow);
+  if (ta > 4) {
+    ctx.strokeStyle = '#ffd166'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(W / 2 + 40, by + bh / 2); ctx.lineTo(W / 2 + 40 + ta, by + bh / 2); ctx.stroke();
+    ctx.fillStyle = '#ffd166';
+    ctx.beginPath(); ctx.moveTo(W / 2 + 40 + ta, by + bh / 2 - 6); ctx.lineTo(W / 2 + 40 + ta + 10, by + bh / 2); ctx.lineTo(W / 2 + 40 + ta, by + bh / 2 + 6); ctx.fill();
+    ctx.fillStyle = '#ffd166'; ctx.font = '10px Nunito,sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText('Thrust', W / 2 + 44, by + bh / 2 - 10);
+  }
+  // Friction arrow
+  const fa = Math.min(friction / 100 * maxArrow, maxArrow);
+  if (fa > 4) {
+    ctx.strokeStyle = '#4ecca3'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(W / 2 - 40, by + bh / 2); ctx.lineTo(W / 2 - 40 - fa, by + bh / 2); ctx.stroke();
+    ctx.fillStyle = '#4ecca3';
+    ctx.beginPath(); ctx.moveTo(W / 2 - 40 - fa, by + bh / 2 - 6); ctx.lineTo(W / 2 - 40 - fa - 10, by + bh / 2); ctx.lineTo(W / 2 - 40 - fa, by + bh / 2 + 6); ctx.fill();
+    ctx.fillStyle = '#4ecca3'; ctx.textAlign = 'right';
+    ctx.fillText('Friction', W / 2 - 44, by + bh / 2 - 10);
+  }
+  // Resultant indicator
+  ctx.fillStyle = resultant > 0 ? '#ff6b6b' : resultant < 0 ? '#6c8fff' : '#4ecca3';
+  ctx.font = 'bold 10px Nunito,sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('Resultant: ' + resultant + ' N', W / 2, 10);
+}
+
+// ─── TERMINAL VELOCITY ───
+let termRunning = false, termY = 0, termV = 0, termT = 0, termRAF = null, termWeightVal = 40;
+let termHistory = [];
+function updateTerminal() {
+  termWeightVal = +document.getElementById('sl-weight').value;
+  document.getElementById('lbl-weight').textContent = termWeightVal + ' N';
+  resetTerminal();
+}
+function initTerminalCanvas() { drawTerminalFrame(); }
+function resetTerminal() {
+  if (termRAF) cancelAnimationFrame(termRAF);
+  termRunning = false; termY = 0; termV = 0; termT = 0; termHistory = [];
+  document.getElementById('term-btn').textContent = '▶ Drop Object';
+  document.getElementById('term-info').textContent = 'Not dropped yet';
+  drawTerminalFrame();
+}
+function toggleTerminal() {
+  if (termRunning) { termRunning = false; document.getElementById('term-btn').textContent = '▶ Resume'; }
+  else {
+    if (termY >= 0.95) resetTerminal();
+    termRunning = true;
+    document.getElementById('term-btn').textContent = '⏸ Pause';
+    addXP(10);
+    termRAF = requestAnimationFrame(termLoop);
+  }
+}
+function termLoop(ts) {
+  if (!termRunning) return;
+  const weight = termWeightVal, mass = weight / 10;
+  const drag = termV * termV * 0.15;
+  const netF = weight - drag;
+  const a = netF / mass;
+  termV = Math.max(0, termV + a * 0.016);
+  termT += 0.016;
+  const termVel = weight / 0.15;
+  termY = Math.min(termY + termV * 0.016 / 20, 1);
+  termHistory.push({ t: termT, v: termV, vt: Math.sqrt(termVel) });
+  drawTerminalFrame();
+  const tv = Math.sqrt(termVel);
+  document.getElementById('term-info').textContent =
+    `v = ${termV.toFixed(1)} m/s  |  Terminal ≈ ${tv.toFixed(1)} m/s  |  ${termV >= tv * 0.97 ? '⚡ Terminal velocity reached!' : 'Still accelerating...'}`;
+  if (termY < 1) termRAF = requestAnimationFrame(termLoop);
+  else { termRunning = false; document.getElementById('term-btn').textContent = '↺ Reset'; }
+}
+function drawTerminalFrame() {
+  const canvas = document.getElementById('termCanvas');
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = Math.round(canvas.offsetWidth * dpr);
+  canvas.height = 130 * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const W = canvas.offsetWidth, H = 130;
+  ctx.clearRect(0, 0, W, H);
+  // sky gradient
+  const grd = ctx.createLinearGradient(0, 0, 0, H);
+  grd.addColorStop(0, '#0f1117'); grd.addColorStop(1, '#1a1d27');
+  ctx.fillStyle = grd; ctx.fillRect(0, 0, W, H);
+  // ground
+  ctx.fillStyle = '#2a2d3e'; ctx.fillRect(0, H - 12, W, 12);
+  // dotted fall line
+  ctx.strokeStyle = 'rgba(108,143,255,0.2)'; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+  ctx.beginPath(); ctx.moveTo(W / 2, 10); ctx.lineTo(W / 2, H - 12); ctx.stroke(); ctx.setLineDash([]);
+  // object
+  const objY = 10 + termY * (H - 40);
+  ctx.fillStyle = '#6c8fff'; ctx.shadowColor = '#6c8fff'; ctx.shadowBlur = 8;
+  ctx.beginPath(); ctx.roundRect(W / 2 - 18, objY - 12, 36, 24, 5); ctx.fill();
+  ctx.shadowBlur = 0;
+  // arrows
+  const weight = termWeightVal, mass = weight / 10;
+  const drag = termV * termV * 0.15;
+  const maxA = 25;
+  const wA = Math.min(weight / 100 * maxA + 5, 35);
+  const dA = Math.min(drag / 100 * maxA, 35);
+  // weight arrow (down)
+  ctx.strokeStyle = '#ff6b6b'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(W / 2, objY + 12); ctx.lineTo(W / 2, objY + 12 + wA); ctx.stroke();
+  ctx.fillStyle = '#ff6b6b';
+  ctx.beginPath(); ctx.moveTo(W / 2 - 4, objY + 8 + wA); ctx.lineTo(W / 2, objY + 18 + wA); ctx.lineTo(W / 2 + 4, objY + 8 + wA); ctx.fill();
+  // drag arrow (up) - grows as speed increases
+  if (dA > 2) {
+    ctx.strokeStyle = '#4ecca3'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(W / 2 + 26, objY + 12); ctx.lineTo(W / 2 + 26, objY + 12 - dA); ctx.stroke();
+    ctx.fillStyle = '#4ecca3';
+    ctx.beginPath(); ctx.moveTo(W / 2 + 22, objY + 12 - dA + 10); ctx.lineTo(W / 2 + 26, objY + 2 - dA); ctx.lineTo(W / 2 + 30, objY + 12 - dA + 10); ctx.fill();
+  }
+  // labels
+  ctx.font = '9px Nunito,sans-serif'; ctx.textAlign = 'right';
+  ctx.fillStyle = '#ff6b6b'; ctx.fillText('W=' + weight + 'N', W / 2 - 22, objY + 20);
+  if (dA > 2) { ctx.fillStyle = '#4ecca3'; ctx.textAlign = 'left'; ctx.fillText('D=' + drag.toFixed(0) + 'N', W / 2 + 30, objY); }
+  // mini v-t graph
+  if (termHistory.length > 2) {
+    const gx = W - 85, gy = 10, gw = 75, gh = 50;
+    ctx.fillStyle = 'rgba(0,0,0,0.5)'; ctx.fillRect(gx - 4, gy - 4, gw + 8, gh + 8);
+    ctx.font = '7px Space Mono,monospace'; ctx.textAlign = 'left'; ctx.fillStyle = '#8b8fa8';
+    ctx.fillText('v-t graph', gx, gy - 6 + 4);
+    const maxV = termHistory[termHistory.length - 1].vt * 1.2;
+    const maxT = Math.max(termHistory[termHistory.length - 1].t, 0.1);
+    ctx.strokeStyle = '#6c8fff'; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    termHistory.forEach((p, i) => {
+      const px = gx + (p.t / maxT) * gw, py = gy + gh - (p.v / maxV) * gh;
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    });
+    ctx.stroke();
+    // terminal line
+    const tvY = gy + gh - (termHistory[0].vt / maxV) * gh;
+    ctx.strokeStyle = 'rgba(76,204,163,0.4)'; ctx.lineWidth = 1; ctx.setLineDash([2, 2]);
+    ctx.beginPath(); ctx.moveTo(gx, tvY); ctx.lineTo(gx + gw, tvY); ctx.stroke(); ctx.setLineDash([]);
+  }
+}
+
+// ─── FIELD EXPLORER ───
+let fieldMode = 'gravity', fieldAnim = null, fieldRunning = true;
+function setFieldMode(m) {
+  fieldMode = m;
+  document.querySelectorAll('#sec-sim .sim-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  drawFieldCanvas();
+  const info = {
+    gravity: '🌍 Gravity always pulls objects together. The force increases as masses get larger or distance decreases.',
+    attract: '🧲 Opposite poles (N→S) or opposite charges (+→−) attract each other.',
+    repel: '↔️ Like poles (N↔N) or like charges (+↔+) repel each other.'
+  };
+  document.getElementById('field-info').textContent = info[m];
+}
+function initFieldCanvas() { drawFieldCanvas(); }
+function drawFieldCanvas() {
+  const canvas = document.getElementById('fieldCanvas');
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = Math.round(canvas.offsetWidth * dpr);
+  canvas.height = 130 * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const W = canvas.offsetWidth, H = 130;
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#0f1117'; ctx.fillRect(0, 0, W, H);
+  if (fieldMode === 'gravity') {
+    // Earth + satellite
+    ctx.fillStyle = '#1a4a3a'; ctx.strokeStyle = '#4ecca3'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(W / 2, H / 2, 35, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#4ecca3'; ctx.font = 'bold 11px Nunito,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('Earth', W / 2, H / 2);
+    // field lines
+    for (let a = 0; a < Math.PI * 2; a += Math.PI / 4) {
+      ctx.strokeStyle = 'rgba(255,107,107,0.35)'; ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(W / 2 + Math.cos(a) * 38, H / 2 + Math.sin(a) * 38);
+      ctx.lineTo(W / 2 + Math.cos(a) * 62, H / 2 + Math.sin(a) * 62);
+      ctx.stroke();
+      // arrowhead pointing inward
+      const ex = W / 2 + Math.cos(a) * 40, ey = H / 2 + Math.sin(a) * 40;
+      ctx.fillStyle = '#ff6b6b';
+      ctx.beginPath();
+      ctx.moveTo(ex - Math.cos(a + 0.3) * 6, ey - Math.sin(a + 0.3) * 6);
+      ctx.lineTo(ex - Math.cos(a) * 8, ey - Math.sin(a) * 8);
+      ctx.lineTo(ex - Math.cos(a - 0.3) * 6, ey - Math.sin(a - 0.3) * 6);
+      ctx.fill();
+    }
+    // small satellite
+    ctx.fillStyle = '#6c8fff'; ctx.strokeStyle = '#6c8fff'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(W / 2 + 70, H / 2, 8, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = 'rgba(108,143,255,0.4)'; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.arc(W / 2, H / 2, 70, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#8b8fa8'; ctx.font = '9px Nunito,sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Gravity pulls inward (all directions)', 8, 8);
+  } else {
+    const isAttr = fieldMode === 'attract';
+    const c1 = { x: W * 0.3, y: H / 2 }, c2 = { x: W * 0.7, y: H / 2 };
+    [c1, c2].forEach((c, i) => {
+      const labels = isAttr ? ['N', 'S'] : ['N', 'N'];
+      const colors = isAttr ? ['#ff6b6b', '#6c8fff'] : ['#ff6b6b', '#ff6b6b'];
+      ctx.fillStyle = '#1a2a3a'; ctx.strokeStyle = colors[i]; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(c.x, c.y, 25, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = colors[i]; ctx.font = 'bold 14px Nunito,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(labels[i], c.x, c.y);
+    });
+    // field lines
+    const steps = 6;
+    for (let s = 0; s < steps; s++) {
+      const a = (s / steps) * Math.PI * 2;
+      const color = isAttr ? 'rgba(108,143,255,0.5)' : 'rgba(255,107,107,0.5)';
+      ctx.strokeStyle = color; ctx.lineWidth = 1.2; ctx.setLineDash([3, 3]);
+      if (isAttr) {
+        ctx.beginPath();
+        ctx.moveTo(c1.x + Math.cos(a) * 26, c1.y + Math.sin(a) * 26);
+        ctx.quadraticCurveTo((c1.x + c2.x) / 2, H / 2 + Math.sin(a) * 25, c2.x - Math.cos(a) * 26, c2.y + Math.sin(a) * 26);
+        ctx.stroke();
+      } else {
+        ctx.beginPath();
+        ctx.moveTo(c1.x + Math.cos(a) * 26, c1.y + Math.sin(a) * 26);
+        ctx.lineTo(c1.x + Math.cos(a) * 55, c1.y + Math.sin(a) * 55);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(c2.x + Math.cos(a) * 26, c2.y + Math.sin(a) * 26);
+        ctx.lineTo(c2.x + Math.cos(a) * 55, c2.y + Math.sin(a) * 55);
+        ctx.stroke();
+      }
+      ctx.setLineDash([]);
+    }
+    // Arrow showing result
+    const arrowColor = isAttr ? '#4ecca3' : '#ff6b6b';
+    ctx.strokeStyle = arrowColor; ctx.lineWidth = 3;
+    if (isAttr) {
+      ctx.beginPath(); ctx.moveTo(c1.x + 28, c1.y); ctx.lineTo(c1.x + 55, c1.y); ctx.stroke();
+      ctx.fillStyle = arrowColor; ctx.beginPath(); ctx.moveTo(c1.x + 50, c1.y - 5); ctx.lineTo(c1.x + 60, c1.y); ctx.lineTo(c1.x + 50, c1.y + 5); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(c2.x - 28, c2.y); ctx.lineTo(c2.x - 55, c2.y); ctx.stroke();
+      ctx.fillStyle = arrowColor; ctx.beginPath(); ctx.moveTo(c2.x - 50, c2.y - 5); ctx.lineTo(c2.x - 60, c2.y); ctx.lineTo(c2.x - 50, c2.y + 5); ctx.fill();
+    } else {
+      ctx.beginPath(); ctx.moveTo(c1.x - 28, c1.y); ctx.lineTo(c1.x - 55, c1.y); ctx.stroke();
+      ctx.fillStyle = arrowColor; ctx.beginPath(); ctx.moveTo(c1.x - 50, c1.y - 5); ctx.lineTo(c1.x - 60, c1.y); ctx.lineTo(c1.x - 50, c1.y + 5); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(c2.x + 28, c2.y); ctx.lineTo(c2.x + 55, c2.y); ctx.stroke();
+      ctx.fillStyle = arrowColor; ctx.beginPath(); ctx.moveTo(c2.x + 50, c2.y - 5); ctx.lineTo(c2.x + 60, c2.y); ctx.lineTo(c2.x + 50, c2.y + 5); ctx.fill();
+    }
+    const label = isAttr ? 'Opposite → Attract' : 'Same → Repel';
+    ctx.fillStyle = arrowColor; ctx.font = 'bold 11px Nunito,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText(label, W / 2, H - 6);
+  }
+}
+
+// ─── MATCH-UP GAME ───
+const matchPairs = [
+  { name: 'Friction', desc: 'Opposes motion between surfaces' },
+  { name: 'Gravity', desc: 'Pulls masses towards each other' },
+  { name: 'Normal Reaction', desc: 'Surface pushes back at 90°' },
+  { name: 'Air Resistance', desc: 'Opposes motion through air (drag)' },
+  { name: 'Upthrust', desc: 'Upward force in a fluid' },
+  { name: 'Tension', desc: 'Force in a stretched rope/spring' },
+  { name: 'Electrostatic', desc: 'Force between charged objects' },
+];
+let matchSelected = null, matchMatched = new Set(), matchMatchedCount = 0;
+function resetMatch() {
+  matchSelected = null; matchMatched = new Set(); matchMatchedCount = 0;
+  document.getElementById('match-score').textContent = 'Matched: 0 / 7';
+  document.getElementById('match-complete').style.display = 'none';
+  const names = [...matchPairs].sort(() => Math.random() - 0.5);
+  const descs = [...matchPairs].sort(() => Math.random() - 0.5);
+  const nEl = document.getElementById('match-names');
+  const dEl = document.getElementById('match-descs');
+  nEl.innerHTML = names.map((p, i) =>
+    `<div class="match-item" id="mn_${p.name.replace(/\s/g,'_')}" onclick="matchClick('name','${p.name.replace(/\s/g,'_')}','${p.name}')">${p.name}</div>`
+  ).join('');
+  dEl.innerHTML = descs.map((p, i) =>
+    `<div class="match-item" id="md_${p.name.replace(/\s/g,'_')}" onclick="matchClick('desc','${p.name.replace(/\s/g,'_')}','${p.name}')" style="margin-bottom:8px">${p.desc}</div>`
+  ).join('');
+}
+function matchClick(type, key, name) {
+  if (matchMatched.has(name)) return;
+  const el = document.getElementById((type === 'name' ? 'mn_' : 'md_') + key);
+  if (!matchSelected) {
+    matchSelected = { type, key, name };
+    el.classList.add('selected');
+  } else {
+    if (matchSelected.type === type) {
+      const old = document.getElementById((matchSelected.type === 'name' ? 'mn_' : 'md_') + matchSelected.key);
+      old.classList.remove('selected');
+      matchSelected = { type, key, name };
+      el.classList.add('selected');
+      return;
+    }
+    const A = matchSelected, B = { type, key, name };
+    if (A.name === B.name) {
+      ['mn_' + A.key, 'md_' + B.key, 'mn_' + B.key, 'md_' + A.key].forEach(id => {
+        const e = document.getElementById(id); if (e) { e.classList.remove('selected'); e.classList.add('matched'); e.setAttribute('disabled', ''); }
+      });
+      matchMatched.add(A.name);
+      matchMatchedCount++;
+      document.getElementById('match-score').textContent = `Matched: ${matchMatchedCount} / 7`;
+      addXP(8);
+      if (matchMatchedCount === 7) { document.getElementById('match-complete').style.display = 'block'; addXP(20); }
+    } else {
+      const elA = document.getElementById((A.type === 'name' ? 'mn_' : 'md_') + A.key);
+      if (elA) elA.classList.add('wrong-flash');
+      el.classList.add('wrong-flash');
+      setTimeout(() => {
+        if (elA) { elA.classList.remove('selected', 'wrong-flash'); }
+        el.classList.remove('wrong-flash');
+      }, 400);
+    }
+    matchSelected = null;
+  }
+}
+
+// ─── QUIZ ───
+const QUESTIONS = [
+  { q: 'A book sits on a table without moving. What can we say about the forces acting on it?', opts: ['There are no forces acting on it', 'The forces are balanced (resultant = 0 N)', 'Gravity is greater than the normal reaction', 'The normal reaction is greater than gravity'], ans: 1, hint: 'Think about Newton\'s First Law — what happens when an object is stationary?', explain: 'The forces are balanced. Weight downward = Normal reaction upward, so resultant = 0 N. This is why it doesn\'t move.' },
+  { q: 'Which of the following is a NON-CONTACT force?', opts: ['Friction', 'Air resistance', 'Gravitational force', 'Normal reaction'], ans: 2, hint: 'Non-contact forces act across a distance without touching.', explain: 'Gravity is a non-contact force — it acts between masses without them needing to touch. Friction, air resistance and normal reaction all require contact.' },
+  { q: 'A car has a thrust of 3000 N and friction of 1000 N. What is the resultant force?', opts: ['4000 N forward', '2000 N forward', '1000 N backward', '3000 N forward'], ans: 1, hint: 'Subtract forces acting in opposite directions.', explain: 'Resultant = Thrust − Friction = 3000 − 1000 = 2000 N forward.' },
+  { q: 'What does a Newton meter (force meter) measure?', opts: ['Mass in kilograms', 'Weight in Newtons', 'Distance in metres', 'Speed in m/s'], ans: 1, hint: 'It\'s named after Newton — what unit did Newton give his name to?', explain: 'A Newton meter measures force (weight) in Newtons. Mass is measured separately on a balance scale.' },
+  { q: 'A skydiver stops accelerating and falls at constant speed. What has happened?', opts: ['Weight became zero', 'Air resistance equals weight — forces balanced', 'Thrust increased', 'Gravity stopped working'], ans: 1, hint: 'When resultant force = 0, what happens to velocity?', explain: 'This is terminal velocity. Air resistance has increased (as speed increased) until it equals the weight. Resultant = 0, so no more acceleration — constant velocity.' },
+  { q: 'Which force acts at 90° to a surface?', opts: ['Friction', 'Tension', 'Normal Reaction', 'Upthrust'], ans: 2, hint: '"Normal" in maths means perpendicular (at right angles).', explain: 'The normal reaction force always acts perpendicular (at 90°) to the surface. It is the surface pushing back on the object.' },
+  { q: 'An object has a mass of 5 kg. A resultant force of 20 N acts on it. What is its acceleration?', opts: ['4 m/s²', '100 m/s²', '0.25 m/s²', '25 m/s²'], ans: 0, hint: 'Use F = m × a, rearranged to a = F ÷ m', explain: 'a = F ÷ m = 20 ÷ 5 = 4 m/s².' },
+  { q: 'Magnetic force is an example of which type of force?', opts: ['Contact force', 'Non-contact force', 'Frictional force', 'Normal reaction'], ans: 1, hint: 'Magnets can attract objects across a gap — do they need to touch?', explain: 'Magnetism is a non-contact force — magnets can attract or repel objects without physically touching them.' },
+];
+
+let quizIdx = 0, quizSel = -1, quizAnswered = false, quizScore = 0;
+function startQuiz() { quizIdx = 0; quizSel = -1; quizAnswered = false; quizScore = 0; renderQ(); }
+function renderQ() {
+  const prog = (quizIdx / QUESTIONS.length) * 100;
+  document.getElementById('quiz-prog').style.width = prog + '%';
+  if (quizIdx >= QUESTIONS.length) { renderResults(); return; }
+  const q = QUESTIONS[quizIdx];
+  const K = ['A', 'B', 'C', 'D'];
+  document.getElementById('quiz-container').innerHTML = `
+    <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:24px">
+      <div class="quiz-header">
+        <span class="quiz-count">Q${quizIdx + 1} / ${QUESTIONS.length}</span>
+        <span class="quiz-xp">+20 XP</span>
+      </div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-opts" id="q-opts">
+        ${q.opts.map((o, i) => `<button class="q-opt" id="qo${i}" onclick="selectOpt(${i})"><span class="q-key">${K[i]}</span>${o}</button>`).join('')}
+      </div>
+      <div id="hint-box" class="hint-box">${q.hint}</div>
+      <div class="q-feedback" id="q-fb"></div>
+      <div class="q-btns">
+        <button class="hint-btn" onclick="showHint()">💡 Hint</button>
+        <button class="q-btn check" id="q-check" onclick="checkQ()" disabled>Check Answer</button>
+        <button class="q-btn next" id="q-next" onclick="nextQ()" style="display:none">Next →</button>
+      </div>
+    </div>`;
+  quizSel = -1; quizAnswered = false;
+}
+function selectOpt(i) {
+  if (quizAnswered) return;
+  quizSel = i;
+  document.querySelectorAll('.q-opt').forEach((o, j) => o.classList.toggle('selected', j === i));
+  document.getElementById('q-check').disabled = false;
+}
+function showHint() {
+  const hb = document.getElementById('hint-box');
+  hb.style.display = hb.style.display === 'block' ? 'none' : 'block';
+}
+function checkQ() {
+  if (quizSel < 0 || quizAnswered) return;
+  quizAnswered = true;
+  const q = QUESTIONS[quizIdx];
+  const correct = quizSel === q.ans;
+  if (correct) { quizScore++; addXP(20); }
+  document.querySelectorAll('.q-opt').forEach((o, j) => {
+    if (j === q.ans) o.classList.add('correct');
+    else if (j === quizSel && !correct) o.classList.add('wrong');
+    o.disabled = true;
+  });
+  const fb = document.getElementById('q-fb');
+  fb.style.display = 'block';
+  fb.className = 'q-feedback ' + (correct ? 'ok' : 'bad');
+  fb.textContent = (correct ? '✅ Correct! — ' : '❌ Not quite — ') + q.explain;
+  document.getElementById('q-check').style.display = 'none';
+  document.getElementById('q-next').style.display = 'block';
+}
+function nextQ() { quizIdx++; renderQ(); }
+function renderResults() {
+  const pct = Math.round(quizScore / QUESTIONS.length * 100);
+  const stars = pct >= 90 ? 5 : pct >= 70 ? 4 : pct >= 50 ? 3 : pct >= 30 ? 2 : 1;
+  const msg = pct >= 90 ? '🎉 Outstanding! You\'re a forces expert!' : pct >= 70 ? '🌟 Great work! You know your forces well.' : pct >= 50 ? '👍 Good effort! Review any concepts you missed.' : '📖 Keep practising — go back through the Learn section!';
+  document.getElementById('quiz-prog').style.width = '100%';
+  document.getElementById('quiz-container').innerHTML = `
+    <div class="results-card" style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius)">
+      <div class="results-score">${quizScore}/${QUESTIONS.length}</div>
+      <div class="results-label">${pct}% correct</div>
+      <div class="results-stars">${'★'.repeat(stars)}${'☆'.repeat(5 - stars)}</div>
+      <div class="results-msg">${msg}</div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="retry-btn" onclick="startQuiz()">↺ Try Again</button>
+        <button class="retry-btn" style="background:var(--surface2);border:1.5px solid var(--border)" onclick="showSection('learn')">📖 Review</button>
+      </div>
+    </div>`;
+}
+
+// ─── PARTICLES ───
+function spawnParticles() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 4 + 2;
+    const colors = ['#6c8fff', '#4ecca3', '#ff6b6b', '#ffd166', '#c77dff'];
+    p.style.cssText = `width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random() * colors.length)]};left:${Math.random() * 100}%;bottom:${Math.random() * -20}%;animation-duration:${8 + Math.random() * 12}s;animation-delay:${Math.random() * 8}s`;
+    container.appendChild(p);
+  }
+}
+spawnParticles();
+
+// ─── INIT ───
+window.addEventListener('resize', () => { updateSim(); drawTerminalFrame(); drawFieldCanvas(); });
+setTimeout(() => { updateSim(); initFieldCanvas(); }, 200);
+</script>
+</body>
+</html>
